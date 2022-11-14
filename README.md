@@ -80,6 +80,23 @@ on cte.datacenter_id = d.datacenter_id
 order by 1
 ```
 
+10.Average Post Hiatus (Part 1)
+SELECT user_id,
+EXTRACT(DAY FROM MAX(post_date)-MIN(post_date)) AS days_between
+FROM posts
+WHERE post_date BETWEEN  '01/01/2021' and '12/31/2021'
+group by user_id
+having count(*) >= 2
+
+11.Teams Power Users
+SELECT sender_id, count(message_id) as message_count
+FROM messages
+where sent_date BETWEEN '08/01/2022' and '08/31/2022' 
+group by sender_id
+order by 2 DESC
+limit 2;
+
+
 
 
 

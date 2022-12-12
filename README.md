@@ -127,7 +127,7 @@ JOIN texts
   ON emails.email_id = texts.email_id
 WHERE texts.action_date = emails.signup_date + INTERVAL '1 day'
   AND signup_action = 'Confirmed';
-  
+```  
 # 15.App Click-through Rate (CTR)
 ```
 SELECT app_id,
@@ -139,7 +139,7 @@ where date_part('Year',timestamp) = '2022'
 group by app_id;
 ```
 # 16. Final Account Balance
-
+```
 SELECT
   account_id, 
   sum(CASE
@@ -148,7 +148,7 @@ SELECT
   END) AS balance_amount
 FROM transactions
 GROUP BY account_id
-
+```
 # 17.Compressed Mean
 ```
 with cte as 

@@ -80,21 +80,107 @@ on cte.datacenter_id = d.datacenter_id
 order by 1
 ```
 
-10.Average Post Hiatus (Part 1)
+# 10.Average Post Hiatus (Part 1)
+```
 SELECT user_id,
 EXTRACT(DAY FROM MAX(post_date)-MIN(post_date)) AS days_between
 FROM posts
 WHERE post_date BETWEEN  '01/01/2021' and '12/31/2021'
 group by user_id
 having count(*) >= 2
+```
 
-11.Teams Power Users
+# 11.Teams Power Users
+```
 SELECT sender_id, count(message_id) as message_count
 FROM messages
 where sent_date BETWEEN '08/01/2022' and '08/31/2022' 
 group by sender_id
 order by 2 DESC
 limit 2;
+```
+# 12. Average Review Ratings
+```
+SELECT DATE_PART('Month',submit_date) as month,
+       product_id, 
+       Round(Avg(stars),2) as avg_stars
+ FROM reviews
+group by 1,2 
+order by 1,2
+```
+# 13. User's Third Transaction
+```
+with cte as
+(SELECT user_id, spend,transaction_date,
+row_number() over(PARTITION BY user_id order by transaction_date) as rn
+FROM transactions)
+
+select user_id,spend,transaction_date
+from cte
+where rn = 3
+```
+# 14. Second Day Confirmation
+```
+SELECT DISTINCT emails.user_id
+FROM emails 
+JOIN texts
+  ON emails.email_id = texts.email_id
+WHERE texts.action_date = emails.signup_date + INTERVAL '1 day'
+  AND signup_action = 'Confirmed';
+  
+# 15.App Click-through Rate (CTR)
+```
+SELECT app_id,
+Round(100.0* 
+Sum(CASE WHEN event_type = 'click' THEN 1 ELSE 0 END)/
+    Sum(CASE WHEN event_type = 'impression' THEN 1 ELSE 0 END),2) as ctr 
+FROM events
+where date_part('Year',timestamp) = '2022'
+group by app_id;
+```
+# 16. Final Account Balance
+
+SELECT
+  account_id, 
+  sum(CASE
+    WHEN transaction_type = 'Deposit' THEN amount
+    ELSE -amount         
+  END) AS balance_amount
+FROM transactions
+GROUP BY account_id
+
+# 17.Compressed Mean
+```
+with cte as 
+(select sum(item_count::DECIMAL*order_occurrences) as Total_items from items_per_order),
+cte1 as
+(SELECT sum(order_occurrences) as total_orders FROM items_per_order)
+select Round(cte.total_items /cte1.total_orders,1) as mean
+from cte, cte1
+```
+# 18. Compressed Mode
+```
+select item_count as mode1
+from items_per_order 
+where order_occurrences in 
+(select max(order_occurrences) from items_per_order)
+order by 1 asc;
+```
+# 19.ApplePay Volume
+```
+SELECT merchant_id, 
+SUM(CASE WHEN LOWER(payment_method) = 'apple pay' THEN transaction_amount
+ELSE 0 END) AS total_transaction
+FROM transactions
+GROUP BY merchant_id
+ORDER BY total_transaction DESC;
+```
+
+
+
+
+
+
 
 
 

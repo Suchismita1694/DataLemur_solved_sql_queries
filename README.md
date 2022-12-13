@@ -175,6 +175,13 @@ FROM transactions
 GROUP BY merchant_id
 ORDER BY total_transaction DESC;
 ```
+# 20. Pharmacy Analytics (Part 1)
+```
+SELECT drug, total_sales-cogs as total_profit
+FROM pharmacy_sales
+order by 2 DESC
+limit 3;
+```
 
 
 

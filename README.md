@@ -182,6 +182,24 @@ FROM pharmacy_sales
 order by 2 DESC
 limit 3;
 ```
+# 21. Pharmacy Analytics (Part 2)
+```
+SELECT manufacturer, count(drug) as drug_count, ABS(Sum(total_sales - cogs)) AS total_loss
+FROM pharmacy_sales
+where total_sales - cogs <= 0
+group by manufacturer
+order by 3 desc;
+```
+# 22. Pharmacy Analytics (Part 3)
+```
+SELECT manufacturer,
+Concat('$',Round(sum(total_sales)/1000000), ' million') as sales
+FROM pharmacy_sales
+group by manufacturer
+order by sum(total_sales) desc;
+```
+
+
 
 
 

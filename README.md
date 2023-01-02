@@ -198,7 +198,31 @@ FROM pharmacy_sales
 group by manufacturer
 order by sum(total_sales) desc;
 ```
+# 23. Patient Support Analysis (Part 1) [UnitedHealth SQL Interview Question]
+```
+with cte AS
+(SELECT policy_holder_id,
+count(case_id) as call_count
+FROM callers
+group by policy_holder_id
+having count(case_id) >= 3)
 
+select count(*)
+from cte;
+```
+# 24. Patient Support Analysis (Part 2) [UnitedHealth SQL Interview Question]
+```
+with cte as  
+(SELECT count(*) as unrecognized_call_count
+FROM callers
+where call_category = 'n/a' or call_category is null)
+
+select 
+round( 100.0*  unrecognized_call_count
+/ (select count(*) from callers),1) as unrecog_call_percent
+from cte 
+group by unrecognized_call_count;
+```
 
 
 

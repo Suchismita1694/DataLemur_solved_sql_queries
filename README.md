@@ -223,6 +223,23 @@ round( 100.0*  unrecognized_call_count
 from cte 
 group by unrecognized_call_count;
 ```
+# 25. Highest-Grossing Items [Amazon SQL Interview Question]
+```
+with cte as 
+(select category, product, SUM(spend) as total_spend
+from product_spend 
+where transaction_date >= '01/01/2022 12:00:00'
+group by category, product),
+xyz as 
+(Select *,
+rank() over (partition by category order by total_spend desc) as rw
+from cte)
+
+select category, product, total_spend
+from xyz
+where rw <= 2
+ORDER BY category, rw
+```
 
 
 

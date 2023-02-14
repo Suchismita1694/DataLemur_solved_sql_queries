@@ -240,7 +240,22 @@ from xyz
 where rw <= 2
 ORDER BY category, rw
 ```
-
+# 26.Sending vs. Opening Snaps [Snapchat SQL Interview Question]
+```
+with cte as
+(SELECT user_id,
+sum(case when activity_type = 'open' then time_spent else 0 end) as opening,
+sum(case when activity_type = 'send' then time_spent else 0 end) as sending
+FROM activities
+group by user_id) 
+select age_bucket, 
+Round((sending / (opening + sending))*100.0,2) as send_per,
+Round((opening / (opening + sending))*100.0,2) as open_per
+from cte 
+join age_breakdown
+on cte.user_id = age_breakdown.user_id
+order by age_bucket asc;
+```
 
 
 

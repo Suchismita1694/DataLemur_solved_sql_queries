@@ -256,7 +256,26 @@ join age_breakdown
 on cte.user_id = age_breakdown.user_id
 order by age_bucket asc;
 ```
+# Odd and Even Measurements [Google SQL Interview Question]
+```
+with cte as (
+select 
+cast(measurement_time as date) as measurement_day, 
+measurement_value, 
+ROW_NUMBER() over (
+partition by cast(measurement_time as date) 
+order by measurement_time) as measurement_num 
+from measurements
+)
 
+select measurement_day,
+sum(case when measurement_num %2 <> 0 then measurement_value
+else 0 end) as odd_sum,
+sum(case when measurement_num % 2 = 0 then measurement_value
+else 0 end) as even_sum
+from cte
+group by measurement_day;
+```
 
 
 

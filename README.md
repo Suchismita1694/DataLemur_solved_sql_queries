@@ -256,7 +256,7 @@ join age_breakdown
 on cte.user_id = age_breakdown.user_id
 order by age_bucket asc;
 ```
-# Odd and Even Measurements [Google SQL Interview Question]
+# 27. Odd and Even Measurements [Google SQL Interview Question]
 ```
 with cte as (
 select 
@@ -275,6 +275,19 @@ sum(case when measurement_num % 2 = 0 then measurement_value
 else 0 end) as even_sum
 from cte
 group by measurement_day;
+```
+# 28. Signup Activation Rate [TikTok SQL Interview Question]
+
+```
+with cte as (
+select
+SUM(case when signup_action = 'Confirmed' then 1 else 0 end) as Conf,
+Sum(Case when signup_action = 'Not Confirmed' or signup_action = 'Confirmed' 
+then 1 else 0 end) as total
+FROM texts)
+
+Select Round(conf * 1.0/total,2)
+from cte
 ```
 
 

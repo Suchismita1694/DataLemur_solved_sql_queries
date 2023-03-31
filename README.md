@@ -289,7 +289,19 @@ FROM texts)
 Select Round(conf * 1.0/total,2)
 from cte
 ```
+# 29. Histogram of Users and Purchases [Walmart SQL Interview Question]
 
+```
+with cte as 
+(select *,
+rank() over(partition by user_id order by transaction_date desc) as rnk
+from user_transactions)
+
+select transaction_date, user_id, count(*) as pur
+from cte 
+where rnk = 1
+group by transaction_date, user_id
+```
 
 
 

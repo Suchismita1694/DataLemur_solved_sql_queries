@@ -302,7 +302,18 @@ from cte
 where rnk = 1
 group by transaction_date, user_id
 ```
+# 30. Y-on-Y Growth Rate [Wayfair SQL Interview Question]
+```
+with cte AS 
+(SELECT Extract(year from transaction_date) as year_ , product_id,
+spend as current_spend,
+lag(spend) over(partition by product_id order by Extract(year from transaction_date)) as prev
+from user_transactions )
 
+select * ,
+Round(((current_spend - prev)/prev) * 100,2) as yoy
+from cte
+```
 
 
 

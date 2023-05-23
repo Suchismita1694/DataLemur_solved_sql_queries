@@ -315,6 +315,24 @@ Round(((current_spend - prev)/prev) * 100,2) as yoy
 from cte
 ```
 
+# 31. Patient Support Analysis (Part 3) [UnitedHealth SQL Interview Question]
+```
+with cte as 
+(SELECT policy_holder_id, call_received,
+lag(call_received) 
+over(partition by policy_holder_id order by call_received) as prev_call
+FROM callers
+),
+cte2 as 
+(select *, 
+EXTRACT(EPOCH FROM call_received - prev_call)/(24*60*60) as time_diff 
+from cte)
+
+SELECT COUNT(DISTINCT policy_holder_id) AS patient_count
+FROM cte2
+WHERE time_diff <= 7
+```
+
 
 
 
